@@ -1,0 +1,80 @@
+{
+  "name": "ceres",
+  "version": "1.0.0",
+  "description": "Plant hydroponic IOT System",
+  "main": "wwwroot/js/main.js",
+  "scripts": {
+    "watch": "watchify -x react -x jquery -x react-dom -x bootstrap ./src/main/resources/static/js/ViewAllArticles/main.js -o ./src/main/resources/static/js/ViewAllArticles/bundle.js -t [ babelify ]",
+    "build": "browserify ./wwwroot/js/main.js -o ./wwwroot/js/bundle.js -t [ babelify ]",
+    "debug": "browserify -x ./src/main/resources/static/js/dependenciesBundle.js main.js -o ./src/main/resources/static/js/bundle.js -t [ babelify --presets [ es2015 react ] ] -d",
+    "require": "browserify -r react -r react-dom -r jquery -r bootstrap -o ./src/main/resources/static/js/ViewAllArticles/dependenciesBundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "auth0-lock": "^10.2.2",
+    "aws-iot-device-sdk": "^1.0.14",
+    "bootstrap": "^3.3.5",
+    "browserify": "^13.3.0",
+    "classnames": "^2.2.5",
+    "fs": "0.0.1-security",
+    "gulp-util": "^3.0.8",
+    "jquery": "^3.1.1",
+    "jwt-decode": "^2.0.1",
+    "livereactload": "^3.2.0",
+    "node": "0.0.0",
+    "react": "^15.4.2",
+    "react-bootstrap": "^0.30.0-rc.1",
+    "react-dom": "^15.4.2",
+    "react-router": "^3.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.3.6",
+    "babel-core": "^6.7.7",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
+    "babel-polyfill": "^6.7.4",
+    "babel-plugin-react-transform": "^2.0.2",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "gulp": "^3.9.1",
+    "gulp-server-livereload": "^1.9.2",
+    "gulp-util": "^3.0.7",
+    "livereactload": "^3.1.1",
+    "react-proxy": "^1.1.8",
+    "vinyl-source-stream2": "^0.1.1",
+    "watchify": "^3.7.0"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "es2015"
+    ],
+    "env": {
+      "development": {
+        "plugins": [
+          [
+            "react-transform",
+            {
+              "transforms": [
+                {
+                  "transform": "livereactload/babel-transform",
+                  "imports": [
+                    "react"
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  }
+}
