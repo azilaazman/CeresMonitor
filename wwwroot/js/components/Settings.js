@@ -3,28 +3,32 @@ var PropTypes = React.PropTypes;
 var $ = require('jquery');
 var Settings = React.createClass({
     loadPlantFromServer: function () {
-        // var xhr = new XMLHttpRequest();
-        // xhr.open('get', this.props.url, true);
-        // xhr.onload = function () {
-        //     var data = JSON.parse(xhr.responseText);
-        //     var length = data.length;
-        //     //console.log(data[length - 1]);
-        //     var lastData = data[length - 1]; //the json data that we want
-        //     this.setState({ name: lastData['name'] });
-        //     var gc = lastData['growing_conditions'];
-        //     this.setState({ temp: gc['temp'] });
-        //     this.setState({ humid: gc['humid'] });
-        //     this.setState({ light: gc['light'] });
-        //     this.setState({ power: gc['power'] });
-        //     this.setState({ water: gc['water']})
-        //     this.setState({ care: gc['care'] });
-        // }.bind(this);
-        // xhr.send();
-        // 
-        // console.log(this.state.care);
-    },
+        
+        setInterval(function() {
+          // console.log("hi");  
+          
+          $.post("http://cereswebapi.azurewebsites.net/api/v1/getUnitSettings/5846c5f5f36d282dbc87f8d4",function(){
+          }).done(function(data){
+            var plantData = data[0];
+            // console.log(plantData);
+            // console.log(plantData["temp"]);
+            this.setState({
+              unit_id: plantData["_id"],
+              temp:  plantData["temp"] + '°C',
+              humid: plantData["humid"] + '%',
+              water: plantData["water"],
+              light: plantData["light"] + 'lm' ,
+              name: plantData["name"]  
+            })
+            console.log("unit id: " + this.state.unit_id);
+
+
+          }.bind(this));//end done
+        }.bind(this),2000);
+      },
     getInitialState: function () {
         return {
+            unit_id: '',
             name: '',
             temp: '',
             humid: '',
@@ -35,21 +39,22 @@ var Settings = React.createClass({
     },
     componentDidMount: function () {
         this.loadPlantFromServer();
-        $('#ddlCareLevel').val(this.state.care).attr("selected", "selected");
+        
+        // $('#ddlCareLevel').val(this.state.care).attr("selected", "selected");
         //var e = document.getElementById("ddlCareLevel");
         //e.options[this.state.care]; 
     },
     componentDidUpdate: function(prevProps, prevState){
         if (this.state.care == null) {
-            console.log("null care level");
+            // console.log("null care level");
             this.loadPlantFromServer();
             this.setState({
                 care: this.state.care
             })
         }
         else {
-            console.log("care is " + this.state.care);
-            $('#ddlCareLevel').val(this.state.care).attr("selected", "selected");
+            // console.log("care is " + this.state.care);
+            // $('#ddlCareLevel').val(this.state.care).attr("selected", "selected");
         }
     },
     _setCare: function(){
@@ -77,6 +82,14 @@ var Settings = React.createClass({
                 <div className="row">
                   <div className="col-lg-6">
                     <form role="form">
+                    <label>CERES Unit ID</label>
+                      <div className="form-group input-group">
+                        <input type="text" className="form-control" value={this.state.unit_id} disabled/>
+                        <span className="input-group-btn">
+                          <button className="btn btn-default" type="button"><i className="fa fa-id-card" />
+                          </button>
+                        </span>
+                      </div>
                       <label>Plant Name</label>
                       <div className="form-group input-group">
                         <input type="text" className="form-control" value={this.state.name} />
@@ -112,14 +125,7 @@ var Settings = React.createClass({
               <input id="water-level" type="text" className="form-control" placeholder="Water Level" value={this.state.water}/>
               <span className="input-group-addon">cm</span>
             </div>
-            <div className="form-group">
-              <label>Care Level</label>
-              <select id="ddlCareLevel" className="form-control">
-                <option value="1">Low</option>
-                <option value="2">Medium</option>
-                <option value="3">High</option>
-              </select>
-            </div>
+           
         {/* Button trigger modal */}
         <button type="button" className="btn btn-success btn-md pull-right" data-toggle="modal" data-target="#myModal">
           Save

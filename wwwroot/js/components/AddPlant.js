@@ -152,6 +152,14 @@ var AddPlant = React.createClass({
                 <option value="3">High</option>
               </select>
             </div>
+            <div className="form-group">
+              <label>Expected End Date</label>
+              <div className="input-group">
+                <input type="text" className="form-control" placeholder="dd/mm/yyyy" />
+                  <span className="input-group-addon"><i className="fa fa-calendar" />
+                </span>
+              </div>
+            </div>
         {/* Button trigger modal */}
         <button type="button" className="btn btn-success btn-md pull-right" data-toggle="modal" data-target="#myModal" onClick={this.handleSubmit}>
           Add Plant
