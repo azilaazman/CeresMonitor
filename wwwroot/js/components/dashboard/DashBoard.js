@@ -12,7 +12,7 @@ var DashBoard = React.createClass({
     setInterval(function() {
       // console.log("hi");  
       
-      $.post("http://cereswebapi.azurewebsites.net/api/v1/getUnitSettings/5846c5f5f36d282dbc87f8d4",function(){
+      $.post("http://cereswebapi.azurewebsites.net/api/v1/GetLatestPlantValue/5846c5f5f36d282dbc87f8d4",function(){
       }).done(function(data){
         var plantData = data[0];
         // console.log(plantData);
