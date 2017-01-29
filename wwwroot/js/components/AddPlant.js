@@ -1,7 +1,13 @@
 ﻿var React = require('react');
 var PropTypes = React.PropTypes;
 
+var end_dateObject, start_dateObject; 
+
 var AddPlant = React.createClass({
+  componentDidMount: function(){
+    this.onEndDatePick();
+    this.onStartDatePick();
+  },
     getInitialState: function(){
         return {
             name: '',
@@ -10,7 +16,36 @@ var AddPlant = React.createClass({
             water: '',
             care: '',
             light: '',
+            startDate: '',
+            endDate: ''
         }
+    },
+    onEndDatePick: function() {
+       $( "#enddatepicker" ).datepicker({dateFormat: 'dd-M-yy'});
+
+    },
+    onStartDatePick: function() {
+       $( "#startdatepicker" ).datepicker({dateFormat: 'dd-M-yy'});
+    },
+    onStartDateBlur: function(){
+      
+
+      setTimeout(function(){
+        start_dateObject = $("#startdatepicker").val();
+        this.setState({ startDate: start_dateObject });
+        console.log("state " +  this.state.startDate);
+
+      }.bind(this), 500);
+    },
+    onEndDateBlur: function(){
+      
+
+      setTimeout(function(){
+        end_dateObject = $("#enddatepicker").val();
+        this.setState({ endDate: end_dateObject });
+        console.log("state " + this.state.endDate);
+
+      }.bind(this), 500);      
     },
     onNameChange: function(e){
         this.setState({ name: e.target.value });
@@ -33,19 +68,34 @@ var AddPlant = React.createClass({
     },
     handleSubmit: function (e) {
         e.preventDefault();
+
+        // start_dateObject = $("#startdatepicker").val();
+        // end_dateObject = $("#enddatepicker").val();
+
+        // this.setState({
+        //   startDate: start_dateObject,
+        //   endDate: end_dateObject
+        // });
+
+        console.log("Start Date: " + this.state.startDate);
+        console.log("End Date: " + this.state.endDate);
+
+
         var name = this.state.name.trim();
         var temp = this.state.temp.trim();
         var humid = this.state.humid.trim();
         var water = this.state.water.trim();
         var care = this.state.care.trim();
         var light = this.state.light.trim();
+        var startDate = this.state.startDate;
+        var endDate = this.state.endDate;
 
         //no validation
-        this.onServerSubmit({ name: name, temp: temp, humid: humid, water: water, care: care, light: light });        
+        this.onServerSubmit({ name: name, temp: temp, humid: humid, water: water, care: care, light: light, startDate: startDate, endDate: endDate });
     },
     onServerSubmit: function (plant) {
         //var plants = this.state.data;
-      
+
         // TODO: submit to the server and refresh the list
         var data = {
             name: plant.name,
@@ -54,17 +104,19 @@ var AddPlant = React.createClass({
             water: plant.water,
             care: plant.care,
             light: plant.light,
+            startDate: plant.startDate,
+            endDate: plant.endDate
         }
 
-        //phase 2: perform front end validation. 
+        //phase 2: perform front end validation.
         //if(valid){$.ajax.. }
         $.ajax({
             type: "POST",
-            url: "http://localhost:52781/api/v1/AddNewPlant",
+            url: "http://cereswebapi.azurewebsites.net/api/v1/AddNewPlant",
             data: data,
             success: function (data) {
                 //clear form
-                this.setState({ name: '', temp: '', humid: '', water: '', light: ''});
+                this.setState({ name: '', temp: '', humid: '', water: '', light: '', startDate: '', endDate: ''});
                 alert("Plant " + plant.name + " added!");
             }.bind(this),
             error: function (e) {
@@ -100,12 +152,8 @@ var AddPlant = React.createClass({
                   <div className="col-lg-6">
                     <form role="form">
                       <label>Plant Name</label>
-                      <div className="form-group input-group">
+                      <div className="form-group">
                         <input type="text" className="form-control" value={this.state.name} onChange={this.onNameChange} />
-                        <span className="input-group-btn">
-                          <button className="btn btn-default" type="button"><i className="fa fa-search" />
-                          </button>
-                        </span>
                       </div>
 
         {/*<div className="form-group input-group">
@@ -127,12 +175,12 @@ var AddPlant = React.createClass({
                         <label>Upload Presets</label>
                         <input type="file" />
                       </div>*/}
+
         </form>
       </div>
         {/* /.col-lg-6 (nested) */}
         <div className="col-lg-6">
-          <label><strong>Environment Presets</strong></label>
-          <form role="form">          
+          <form role="form">
             <label>Humidity</label>
             <div className="form-group input-group">
               <input id="humidity" type="text" className="form-control" placeholder="Humidity" value={this.state.humid} onChange={this.onHumidChange} />
@@ -153,10 +201,18 @@ var AddPlant = React.createClass({
               </select>
             </div>
             <div className="form-group">
+              <label>Start Date</label>
+              <div className="input-group">
+                <input id="startdatepicker" type="text" className="form-control" placeholder="dd/mm/yyyy" value={this.state.startDate} onFocus={this.onStartDateChange} onBlur={this.onStartDateBlur} />
+                <span className="input-group-addon"><i className="fa fa-calendar" />
+                </span>
+              </div>
+            </div>
+            <div className="form-group">
               <label>Expected End Date</label>
               <div className="input-group">
-                <input type="text" className="form-control" placeholder="dd/mm/yyyy" />
-                  <span className="input-group-addon"><i className="fa fa-calendar" />
+                <input id="enddatepicker" type="text" className="form-control" placeholder="dd/mm/yyyy" value={this.state.endDate} onFocus={this.onEndDateChange} onBlur={this.onEndDateBlur} />
+                <span className="input-group-addon"><i className="fa fa-calendar" />
                 </span>
               </div>
             </div>

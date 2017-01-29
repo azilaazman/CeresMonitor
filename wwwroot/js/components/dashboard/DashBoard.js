@@ -4,13 +4,66 @@ import { Link, IndexRoute, browserHistory, hashHistory, IndexRedirect } from 're
 import awsIot from 'aws-iot-device-sdk';
 import BoxPanel from './BoxPanel/BoxPanel.js'
 
+var WaterLevelAlert = React.createClass({
+  componentDidMount: function(){
+      setInterval(function(){
+        this.setState({
+          showAlert: this.props.showAlert
+        })
+      }.bind(this), 5000);
+  },
+  getInitialState: function() {
+    return {
+      showAlert: ''
+    };
+  },
+  renderAlert: function(water, waterAlert) {
+    return (
+      <div>
+      <div className="alert alert-danger alert-dismissable">
+        <button type="button" className="close" onClick={this.close}>×</button>
+        Holy guacamole! Your current water level is {water} which is higher than {waterAlert}. Is this expected? <a href="/plants/settings" className="alert-link"> Modify your settings. </a>
+      </div>
+      </div>
+    );
+  },
+  close: function(){
+    this.setState({
+      showAlert: false
+    });
+  },
+  render: function(){
+    // console.log("in WL Alert: " + this.state.showAlert);
+    let renderAlert = this.state.showAlert ? this.renderAlert(this.props.currentWater, this.props.waterAlert) : null
+
+    return (
+      <div>
+      <div>{renderAlert}</div>
+      </div>
+      );      
+
+  }
+});
+
 
 
 var DashBoard = React.createClass({
+  loadWaterAlertSettings: function(){
+
+    $.post("http://cereswebapi.azurewebsites.net/api/v1/GetUnitSettings/5846c5f5f36d282dbc87f8d4",function(){
+      }).done(function(data){
+        var plantData = data[0];
+        this.setState({
+          waterAlert: plantData["water"]
+        })
+      // console.log(this.state.waterAlert);
+
+      }.bind(this));//end done
+  },
   loadPlantFromServer: function () {
     
     setInterval(function() {
-      // console.log("hi");  
+      
       
       $.post("http://cereswebapi.azurewebsites.net/api/v1/GetLatestPlantValue/5846c5f5f36d282dbc87f8d4",function(){
       }).done(function(data){
@@ -25,9 +78,11 @@ var DashBoard = React.createClass({
           name: plantData["name"]  
         })
 
+        this.checkWaterAlert();
+
 
       }.bind(this));//end done
-    }.bind(this),2000);
+    }.bind(this), 5000);
 
 
 // var buffer = fs.readFileSync(filename);
@@ -61,6 +116,26 @@ var DashBoard = React.createClass({
      
      
     },
+    checkWaterAlert: function(){
+      // var currentWater = parseFloat(this.state.water); //uncomment this once water level data is rcved
+      var currentWater = 6; //FOR TESTING ONLY
+      var alertSetting = parseFloat(this.state.waterAlert);
+      // console.log(currentWater + " and " + alertSetting);
+
+      if(currentWater > alertSetting){
+          this.setState({
+            showAlert: true
+          })
+          // console.log("Water level too high!");      
+        }
+      else
+        {
+          this.setState({
+            showAlert: false
+          })   
+          // console.log("Water level ok!");   
+        }
+   },
    getInitialState: function(){
         return {
             name: '-',
@@ -70,16 +145,19 @@ var DashBoard = React.createClass({
             care: '',
             light: '-lm',
             power: '-W',
+            waterAlert: '',
+            showAlert: false,
         }
     },
    componentDidMount: function(){
      console.log("component did mount..");
-       this.loadPlantFromServer();
+     this.loadWaterAlertSettings();
+     this.loadPlantFromServer();
    },
    render: function() {
         return (
           <div id="page-wrapper">
-            <div className="row">
+            <div className="row">              
               <div className="col-lg-12">
                 <h1 data-step="1" data-intro="This is your home!" className="page-header">Dashboard</h1>
               </div>
@@ -87,6 +165,7 @@ var DashBoard = React.createClass({
             </div>
               {/* /.row */}
           <div className="row">
+          <WaterLevelAlert waterAlert={this.state.waterAlert} currentWater='6' showAlert={this.state.showAlert}/>
             <div className="row" data-step="2" data-intro="Find all your crucial data here!"> 
             
               <BoxPanel 

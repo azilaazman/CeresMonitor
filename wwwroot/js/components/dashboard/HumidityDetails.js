@@ -35,9 +35,9 @@ var statsMax, statsMin, statsAvg;
 
 function UpdateLineChart(data) {
     //Set data returned from Server
-    lineChartArray.datasets[0].data = data.lineChartArrayHumid;
+    lineChartArray.datasets[0].data = data.lineChartArrayHumid.reverse();
     // console.log(data.lineChartArrayHumid);
-    lineChartArray.labels = data.lineChartTimeArray;
+    lineChartArray.labels = data.lineChartTimeArray.reverse();
     return data; 
 };
 
@@ -67,45 +67,45 @@ const HumditiyDetails = React.createClass({
     $.connection.hub.stop();
   },
   updateChart: function(){
-    console.log("in updateChart");
-    var chartHub = $.connection.chartHub;
-    console.log(chartHub);
-    $.connection.hub.url = "http://cereswebapi.azurewebsites.net/signalr/hubs";
-    chartHub.server.initChartData = function(data){
-      console.log(data);
-    };
-    //Call to Update LineChart from Server
-    chartHub.client.updateChart = function (line_data) {
-       UpdateLineChart(line_data);  //Call the LineChart Update method
-       console.log(line_data);
-       console.log(lineChartArray);
-
-
-       //computing summary stats
-      stats = line_data.lineChartArrayHumid;
-      statsMax = Math.max.apply(Math, stats);
-      statsMin = Math.min.apply(Math, stats);
-      var total = 0;
-      for(var i = 0; i < stats.length; i++) {
-          total += stats[i];
-      }
-      statsAvg = total / stats.length;       
-     console.log(stats);
-     console.log("max: " +  statsMax + " min: " + statsMin + " avg: " + statsAvg);
+       var chartHub = $.connection.chartHub;
+       console.log(chartHub);
     
-    };
-     $.connection.hub.start().done(function () {
-         chartHub.server.initChartData();
-         console.log("SignalR has started");
+       var unit_id = '5846c5f5f36d282dbc87f8d4';
 
-     });
+       $.connection.hub.url = "http://ceressignalr.azurewebsites.net/signalr/hubs";
+       $.connection.hub.logging = true;
 
-     
+       //Call to Update LineChart from Server    
+       chartHub.client.updateChart = function (line_data) {
+           UpdateLineChart(line_data);  //Call the LineChart Update method  
+           console.log(line_data);
 
-     
+          stats = line_data.lineChartArrayHumid;
+          statsMax = Math.max.apply(Math, stats);
+          statsMin = Math.min.apply(Math, stats);
+          var total = 0;
+          for(var i = 0; i < stats.length; i++) {
+              total += stats[i]; 
+          }
+          var rawAvg = total / stats.length;
+
+          statsAvg  = Math.round(rawAvg * 10) / 10;     
+           
 
 
-  },
+       };
+
+       $.connection.hub.start({withCredentials: false}).done(function () {
+           chartHub.server.initChartData(unit_id);
+           console.log("hub start");
+
+       });  
+       // $.connection.hub.disconnected(function() {
+       // setTimeout(function() {
+       //  console.log("disconnected");
+       //     $.connection.hub.start({withCredentials: false});
+       // }, 5000); // Restart connection after 5 seconds.
+      },
   render () {
     return (
 <div>

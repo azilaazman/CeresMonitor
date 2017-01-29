@@ -3,28 +3,25 @@ var PropTypes = React.PropTypes;
 var $ = require('jquery');
 var Settings = React.createClass({
     loadPlantFromServer: function () {
-        
-        setInterval(function() {
-          // console.log("hi");  
-          
-          $.post("http://cereswebapi.azurewebsites.net/api/v1/getUnitSettings/5846c5f5f36d282dbc87f8d4",function(){
-          }).done(function(data){
-            var plantData = data[0];
-            // console.log(plantData);
-            // console.log(plantData["temp"]);
-            this.setState({
-              unit_id: plantData["_id"],
-              temp:  plantData["temp"] + '°C',
-              humid: plantData["humid"] + '%',
-              water: plantData["water"],
-              light: plantData["light"] + 'lm' ,
-              name: plantData["name"]  
-            })
-            console.log("unit id: " + this.state.unit_id);
+
+        $.post("http://cereswebapi.azurewebsites.net/api/v1/getUnitSettings/5846c5f5f36d282dbc87f8d4",function(){
+        }).done(function(data){
+          var plantData = data[0];
+          // console.log(plantData);
+          // console.log(plantData["temp"]);
+          this.setState({
+            unit_id: plantData["_id"],
+            temp:  plantData["temp"],
+            humid: plantData["humid"],
+            water: plantData["water"],
+            light: plantData["light"],
+            care: plantData["care"],
+            name: plantData["name"]  
+          })
+          console.log("care: " + this.state.care);
 
 
-          }.bind(this));//end done
-        }.bind(this),2000);
+        }.bind(this));//end done
       },
     getInitialState: function () {
         return {
@@ -33,9 +30,85 @@ var Settings = React.createClass({
             temp: '',
             humid: '',
             water: '',
-            care: '',
             light: '',
+            care: '',
+            clean: true
         }
+    },
+    onNameChange: function(e){
+        this.setState({ 
+          name: e.target.value
+         });
+        this.onDirty();
+    },
+    onTempChange: function (e) {
+        this.setState({ 
+          temp: e.target.value
+        });
+        this.onDirty();
+    },
+    onHumidChange: function (e) {
+        this.setState({ 
+          humid: e.target.value
+        });
+        this.onDirty();
+    },
+    onWaterChange: function (e) {
+        this.setState({ 
+          water: e.target.value,
+        });
+        this.onDirty();
+    },
+    onLightChange: function (e) {
+        this.setState({ 
+          light: e.target.value
+           });
+        this.onDirty();
+    },
+    handleSubmit: function (e) {
+        e.preventDefault();
+
+
+        var name = this.state.name;
+        var temp = this.state.temp;
+        var humid = this.state.humid;
+        var water = this.state.water;
+        var light = this.state.light;
+        var care = this.state.care;
+
+        //no validation
+        this.onServerSubmit({ name: name, temp: temp, humid: humid, water: water, light: light, care: care });        
+    },
+    onDirty: function(){
+      this.setState({ clean: false })
+    },
+    onServerSubmit: function (plant) {
+
+        var data = {
+            name: plant.name,
+            temp: plant.temp,
+            humid: plant.humid,
+            water: plant.water,           
+            light: plant.light,
+            care: plant.care
+        }
+
+        console.log(data);
+
+        // phase 2: perform front end validation. 
+        $.ajax({
+            type: "PUT",
+            url: "http://cereswebapi.azurewebsites.net/api/v1/UpdateUnitSettings/5846c5f5f36d282dbc87f8d4",
+            data: data,
+            success: function (data) {
+                alert("Changes saved!");
+            }.bind(this),
+            error: function (e) {
+                console.log(e);
+                alert('Error: Cannot update settings');
+            }
+        })
+        
     },
     componentDidMount: function () {
         this.loadPlantFromServer();
@@ -45,22 +118,6 @@ var Settings = React.createClass({
         //e.options[this.state.care]; 
     },
     componentDidUpdate: function(prevProps, prevState){
-        if (this.state.care == null) {
-            // console.log("null care level");
-            this.loadPlantFromServer();
-            this.setState({
-                care: this.state.care
-            })
-        }
-        else {
-            // console.log("care is " + this.state.care);
-            // $('#ddlCareLevel').val(this.state.care).attr("selected", "selected");
-        }
-    },
-    _setCare: function(){
-        var care = parseInt(this.state.care);        
-        $("#ddlCareLevel").val(care);
-        console.log("Care is: " + this.state.care);
     },
     render: function() {
         return (
@@ -92,7 +149,7 @@ var Settings = React.createClass({
                       </div>
                       <label>Plant Name</label>
                       <div className="form-group input-group">
-                        <input type="text" className="form-control" value={this.state.name} />
+                        <input type="text" className="form-control" value={this.state.name} onChange={this.onNameChange} />
                         <span className="input-group-btn">
                           <button className="btn btn-default" type="button"><i className="fa fa-search" />
                           </button>
@@ -100,12 +157,12 @@ var Settings = React.createClass({
                       </div>
                      <label>Light Intensity</label>
                     <div className="form-group input-group">
-                      <input id="light" type="text" className="form-control" placeholder="Light Intensity" value={this.state.light} />
+                      <input id="light" type="text" className="form-control" placeholder="Light Intensity" value={this.state.light} onChange={this.onLightChange} />
                       <span className="input-group-addon">lm</span>
                     </div>
                       <label>Temperature</label>
                       <div className="form-group input-group">
-                        <input id="temp" type="text" className="form-control" placeholder="Temperature" value={this.state.temp} />
+                        <input id="temp" type="text" className="form-control" placeholder="Temperature" value={this.state.temp} onChange={this.onTempChange} />
                         <span className="input-group-addon">°C</span>
                       </div>
                       
@@ -117,17 +174,17 @@ var Settings = React.createClass({
           <form role="form">    
           <label>Humidity</label>
             <div className="form-group input-group">
-              <input id="humidity" type="text" className="form-control" placeholder="Humidity" value={this.state.humid} />
+              <input id="humidity" type="text" className="form-control" placeholder="Humidity" value={this.state.humid} onChange={this.onHumidChange} />
               <span className="input-group-addon">%</span>
             </div>        
             <label>Water Level Alert</label>
             <div className="form-group input-group">
-              <input id="water-level" type="text" className="form-control" placeholder="Water Level" value={this.state.water}/>
+              <input id="water-level" type="text" className="form-control" placeholder="Water Level" value={this.state.water} onChange={this.onWaterChange}/>
               <span className="input-group-addon">cm</span>
             </div>
            
         {/* Button trigger modal */}
-        <button type="button" className="btn btn-success btn-md pull-right" data-toggle="modal" data-target="#myModal">
+        <button type="button" className="btn btn-success btn-md pull-right" onClick={this.handleSubmit} disabled={this.state.clean}>
           Save
         </button>
         {/* Modal */}

@@ -10,11 +10,9 @@
     <link href="../wwwroot/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../wwwroot/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
     <link href="../wwwroot/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../wwwroot/bower_components/jquery-ui/jquery-ui.min.css" rel="stylesheet">
     <!-- Add IntroJs styles -->
     <link href="../wwwroot/bower_components/introjs/introjs.css" rel="stylesheet">
-    <!-- Hopscotch css -->
-    <link href="../wwwroot/bower_components/hopscotch/hopscotch.min.css" rel="stylesheet">
-    <link href="../wwwroot/css/ceres.css" rel="stylesheet">
 
 
 </head>
@@ -33,29 +31,41 @@
 
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../wwwroot/Scripts/jquery.signalR-2.2.1.min.js"></script>
-    <!-- <script src="../Scripts/hub.js"></script> -->
-    <script src="http://cereswebapi.azurewebsites.net/signalr/hubs"></script>
-    <!-- <script src="~/signalr/js"></script> -->
+    <script src="http://ceressignalr.azurewebsites.net/signalr/hubs"></script>
 
     <script src="../wwwroot/bower_components/metisMenu/dist/metisMenu.min.js"></script>
     <script src="../wwwroot/js/sb-admin-2.js"></script>
+    <script src="../wwwroot/bower_components/jquery-ui/jquery-ui.min.js"></script>
 
-    <!-- <script src="../wwwroot/js/components/dashboard/TempDetails.js"></script> -->
 
     <script type="text/javascript">
-      // $(function () {
+      $(function () {
 
       //  //Create the Hub
-      //  console.log("Ready!");
-      //  var chartHub = $.connection.chartHub;
-      // //  console.log(chartHub);
-      //  //Call InitChartData
-      //  if (chartHub)
-      //   console.log("SignalR hub initialized.");
+       // console.log("Ready!");
+       // var chartHub = $.connection.chartHub;
+       // console.log(chartHub);
+     
+       // //Call InitChartData     
+       // var unit_id = '5846c5f5f36d282dbc87f8d4';
+       // // var acc_id = '587a036e3e421b27589bff40';
 
-      // $.connection.hub.logging = true;
-    
-    //  });
+
+       // $.connection.hub.url = "http://localhost:52153/signalr/hubs";
+       // $.connection.hub.logging = true;
+       // $.connection.hub.start({withCredentials: false}).done(function () {
+       //     chartHub.server.initChartData(unit_id);
+       //     console.log("initChart = " + unit_id + " : " + acc_id);
+
+       // });
+
+       // //Call to Update LineChart from Server    
+       // chartHub.client.updateChart = function (line_data, pie_data) {
+       //     UpdateLineChart(line_data);  //Call the LineChart Update method  
+       //     console.log(line_data)  
+       //     // UpdatePieChart(pie_data);    //Call the PieChart Update method    
+       // };
+       });
 
     </script>
     <script src="../Scripts/ChartScript.js"></script>
