@@ -138,12 +138,17 @@ var DashBoard = React.createClass({
       var startMoment = moment(this.state.startDate, "DD-MMM-YYYY");
       var ago = moment(startMoment, "YYYYMMDD").fromNow();
 
+      var startFormatted = moment(startMoment).format("DD MMMM YYYY");
+
       var endMoment = moment(this.state.endDate, "DD-MMM-YYYY");
       var left = moment(endMoment, "YYYYMMDD").fromNow();
+      var endFormatted = moment(endMoment).format("DD MMMM YYYY");
 
       this.setState({
         timeAgo: ago,
-        timeLeft: left
+        timeLeft: left,
+        startDate: startFormatted,
+        endDate: endFormatted
       })
       // console.log(this.state.timeAgo + " : " + this.state.timeLeft);
     },
