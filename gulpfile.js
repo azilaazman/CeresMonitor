@@ -13,7 +13,9 @@ const browserify = require('browserify'),
   livereactload = require('livereactload'),
   livereload = require('gulp-server-livereload'),
   gulp = require('gulp'),
-  gutil = require('gulp-util');
+  gutil = require('gulp-util'),
+  moment = require('moment');
+  moment().format();
 
 /*
   gulp.task(names,deps,fn)
@@ -86,7 +88,8 @@ const browserify = require('browserify'),
     host: 'localhost',
     port: 8080,
     open: true,
-    defaultFile: './Views/Home/index.html',
+    // defaultFile: './Views/Home/index.html',
+    defaultFile: 'Index.html',
     fallback: './Views/Home/index.html'
   }));
 });

@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var moment = require('moment');
 import React, { PropTypes } from 'react';
 import { Link, IndexRoute, browserHistory, hashHistory, IndexRedirect } from 'react-router';
 import awsIot from 'aws-iot-device-sdk';
@@ -10,7 +11,7 @@ var WaterLevelAlert = React.createClass({
         this.setState({
           showAlert: this.props.showAlert
         })
-      }.bind(this), 5000);
+      }.bind(this), 3000);
   },
   getInitialState: function() {
     return {
@@ -22,7 +23,7 @@ var WaterLevelAlert = React.createClass({
       <div>
       <div className="alert alert-danger alert-dismissable">
         <button type="button" className="close" onClick={this.close}>×</button>
-        Holy guacamole! Your current water level is {water} which is higher than {waterAlert}. Is this expected? <a href="/plants/settings" className="alert-link"> Modify your settings. </a>
+        Holy guacamole! Your current water level is at {water}cm which has exceeded your water level settings of {waterAlert}cm. Is this expected? <a href="/plants/settings" className="alert-link"> Modify your settings. </a>
       </div>
       </div>
     );
@@ -74,15 +75,32 @@ var DashBoard = React.createClass({
           temp:  plantData["temp"] + '°C',
           humid: plantData["humid"] + '%',
           water: plantData["water"],
-          light: plantData["light"] + 'lm' ,
-          name: plantData["name"]  
+          light: plantData["light"] + 'lm'
         })
 
         this.checkWaterAlert();
 
 
       }.bind(this));//end done
-    }.bind(this), 5000);
+    }.bind(this), 2000);
+
+    $.post("http://cereswebapi.azurewebsites.net/api/v1/getUnitSettings/5846c5f5f36d282dbc87f8d4",function(){
+      }).done(function(data){
+        var plantData = data[0];
+        // console.log(plantData);
+        // console.log(plantData["temp"]);
+        this.setState({
+          name: plantData["name"],
+          startDate: plantData["startDate"],
+          endDate: plantData["endDate"]
+        })
+
+        this.formatDate();
+
+      }.bind(this));//end done
+
+
+
 
 
 // var buffer = fs.readFileSync(filename);
@@ -116,6 +134,19 @@ var DashBoard = React.createClass({
      
      
     },
+    formatDate: function(){
+      var startMoment = moment(this.state.startDate, "DD-MMM-YYYY");
+      var ago = moment(startMoment, "YYYYMMDD").fromNow();
+
+      var endMoment = moment(this.state.endDate, "DD-MMM-YYYY");
+      var left = moment(endMoment, "YYYYMMDD").fromNow();
+
+      this.setState({
+        timeAgo: ago,
+        timeLeft: left
+      })
+      // console.log(this.state.timeAgo + " : " + this.state.timeLeft);
+    },
     checkWaterAlert: function(){
       // var currentWater = parseFloat(this.state.water); //uncomment this once water level data is rcved
       var currentWater = 6; //FOR TESTING ONLY
@@ -147,6 +178,10 @@ var DashBoard = React.createClass({
             power: '-W',
             waterAlert: '',
             showAlert: false,
+            startDate: '',
+            endDate: '',
+            timeAgo: '',
+            timeLeft: ''
         }
     },
    componentDidMount: function(){
@@ -208,28 +243,18 @@ var DashBoard = React.createClass({
           <h4>Your CERES Unit is growing <span className="text-success">{this.state.name}<i className="fa fa-pagelines" aria-hidden="true" /></span></h4>
           <div className="list-group">
                <a href="#" className="list-group-item">
-                  <i className="fa fa-birthday-cake fa-fw"></i> 22 November 2016
+                  <i className="fa fa-birthday-cake fa-fw"></i> {this.state.startDate}
                     <span className="pull-right text-muted small">
-                        <em>just today</em>
+                        <em>{this.state.timeAgo}</em>
                     </span>
                </a>
               <a href="#" className="list-group-item">
-                    <i className="fa fa-hourglass-end fa-fw"></i> 22 December 2016
-                    <span className="pull-right text-muted small">
-                        <em>29 days to go</em>
+                    <i className="fa fa-hourglass-end fa-fw"></i> {this.state.endDate}
+                    <span className="pull-right text-muted small"> 
+                        <em>{this.state.timeLeft} time</em>
                     </span>
-              </a>
-              <a href="#" className="list-group-item">
-                    <i className="fa fa-video-camera fa-fw"></i> Spinach Cam
-              </a>    
-              <div className="camStyle">       
-                <iframe src="http://www.w3schools.com" scrolling="no">
-                  <p>To put live video content</p>
-                </iframe>
-              </div> 
+              </a>  
           </div>
-            {/* /.list-group */}
-        <a href="#" className="btn btn-default btn-block">View All Info</a>
         </div>
                 {/* /.panel-body */}
             </div>
@@ -239,13 +264,13 @@ var DashBoard = React.createClass({
         <div className="col-md-6">
           <div className="panel panel-default">
             <div className="panel-heading">
-              <i className="fa fa-bar-chart-o fa-fw" />Sunlight Intensity
+              <i className="fa fa-video-camera fa-fw" /> {this.state.name} Live Feed
             </div>
               {/* /.panel-heading */}
         <div className="panel-body">
-          <div className="flot-chart">
-            <div className="flot-chart-content" id="flot-line-chart-moving" style={{height: 400}} />
-          </div>
+            <iframe src="http://www.w3schools.com" scrolling="no" width="100%" height="50%">
+                  <p>To put live video content</p>
+            </iframe>
         </div>
               {/* /.panel-body */}
           </div>
