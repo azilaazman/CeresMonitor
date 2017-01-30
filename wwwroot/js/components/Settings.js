@@ -32,7 +32,8 @@ var Settings = React.createClass({
             water: '',
             light: '',
             care: '',
-            clean: true
+            clean: true,
+            saved: false
         }
     },
     onNameChange: function(e){
@@ -101,7 +102,10 @@ var Settings = React.createClass({
             url: "http://cereswebapi.azurewebsites.net/api/v1/UpdateUnitSettings/5846c5f5f36d282dbc87f8d4",
             data: data,
             success: function (data) {
-                alert("Changes saved!");
+                // alert("Changes saved!");
+                this.setState({
+                  saved: true 
+                })
             }.bind(this),
             error: function (e) {
                 console.log(e);
@@ -117,9 +121,22 @@ var Settings = React.createClass({
         //var e = document.getElementById("ddlCareLevel");
         //e.options[this.state.care]; 
     },
-    componentDidUpdate: function(prevProps, prevState){
+    renderChangesSaved: function(){
+      return(
+      
+        <div className="alert alert-success alert-dismissable">
+        <button type="button" className="close" onClick={this.close}></button>
+        Your CERES unit environment variables has been changed. Please allow the unit some
+        time to adjust itself. 
+        </div>
+
+        );
     },
     render: function() {
+
+      console.log(this.state.saved);
+      let renderChanges = this.state.saved ? this.renderChangesSaved() : null
+
         return (
           <div id="page-wrapper">
             <div className="row">
@@ -129,6 +146,7 @@ var Settings = React.createClass({
         {/* /.col-lg-12 */}
         </div>
         {/* /.row */}
+        {renderChanges}
         <div className="row">
           <div className="col-lg-12">
             <div className="panel panel-default">

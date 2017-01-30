@@ -17,7 +17,8 @@ var AddPlant = React.createClass({
             care: '',
             light: '',
             startDate: '',
-            endDate: ''
+            endDate: '',
+            success: undefined
         }
     },
     onEndDatePick: function() {
@@ -110,6 +111,7 @@ var AddPlant = React.createClass({
 
         //phase 2: perform front end validation.
         //if(valid){$.ajax.. }
+        var self = this; 
         $.ajax({
             type: "POST",
             url: "http://cereswebapi.azurewebsites.net/api/v1/AddNewPlant",
@@ -117,11 +119,18 @@ var AddPlant = React.createClass({
             success: function (data) {
                 //clear form
                 this.setState({ name: '', temp: '', humid: '', water: '', light: '', startDate: '', endDate: ''});
-                alert("Plant " + plant.name + " added!");
+                // alert("Plant " + plant.name + " added!");
+                this.setState({
+                  success: true
+                });
             }.bind(this),
             error: function (e) {
                 console.log(e);
-                alert('Error: Add plant failed');
+                self.setState({
+                  success: false
+                });
+                console.log(success + " on error");
+                alert('Error: Add plant failed');                              
             }
         })
         console.log(data);
@@ -130,7 +139,37 @@ var AddPlant = React.createClass({
         //xhr.open('post', this.props.submitUrl, true);
         //xhr.send(data);
     },
+    renderSuccess: function(){
+      return (
+    
+      <div className="alert alert-success alert-dismissable">
+        <button type="button" className="close" onClick={this.close}></button>
+        Your new plant has been added succesfully! 
+      </div>
+  
+        );
+    }, 
+    renderFail: function(){
+      return (
+    
+      <div className="alert alert-danger alert-dismissable">
+        <button type="button" className="close" onClick={this.close}></button>
+        Something went wrong! Nothing was added. 
+      </div>
+  
+        );
+    },
     render: function() {
+
+      // console.log('success is ' + this.state.success)
+      if (this.state.success == undefined){
+        var undefined = true; 
+        // console.log(undefined)
+      }
+      let renderNone = undefined ? null : null
+      let renderSuccess = this.state.success ? this.renderSuccess() : null      
+      let renderFail = (this.state.success == false) ? this.renderFail() : null
+
         return (
 
           <div id="page-wrapper">
@@ -141,6 +180,9 @@ var AddPlant = React.createClass({
         {/* /.col-lg-12 */}
         </div>
         {/* /.row */}
+        {renderNone}
+        {renderSuccess}
+        {renderFail}
         <div className="row">
           <div className="col-lg-12">
             <div className="panel panel-default">
@@ -148,7 +190,7 @@ var AddPlant = React.createClass({
                 Basic Information
               </div>
               <div className="panel-body">
-                <div className="row">
+                <div className="row"> 
                   <div className="col-lg-6">
                     <form role="form">
                       <label>Plant Name</label>
