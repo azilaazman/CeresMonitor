@@ -35,11 +35,14 @@ var Nav = React.createClass({
   this.props.auth.logout()
   this.context.router.push('/login');
   },
+  setCollapse(){
+      $('#navbarMenu').toggleClass( "collapse" );
+  },
   render: function() {
     return (
       <nav className="navbar navbar-default navbar-static-top" role="navigation" style={{marginBottom: 0}}>
         <div className="navbar-header">
-          <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".sidebar-nav navbar-collapse" onClick={this.setCollapse}>
             <span className="sr-only">Toggle navigation</span>
             <span className="icon-bar" />
             <span className="icon-bar" />
@@ -48,7 +51,7 @@ var Nav = React.createClass({
           <a className="navbar-brand" href="#"><img src="http://oi66.tinypic.com/riepdv.jpg"/></a>
         </div>{/* /.navbar-header */}
         <div className="navbar-default sidebar" role="navigation">
-          <div className="sidebar-nav navbar-collapse" data-step="4" data-intro="Navigate around here!">
+          <div id="navbarMenu" className="sidebar-nav navbar-collapse collapse" data-step="4" data-intro="Navigate around here!">
             <ul className="nav" id="side-menu">
               <li>
                 <Link to="/plants/dashboard" activeClassName="active">

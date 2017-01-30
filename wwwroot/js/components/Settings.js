@@ -16,7 +16,9 @@ var Settings = React.createClass({
             water: plantData["water"],
             light: plantData["light"],
             care: plantData["care"],
-            name: plantData["name"]  
+            name: plantData["name"],
+            startDate: plantData["startDate"],
+            endDate: plantData["endDate"]  
           })
           console.log("care: " + this.state.care);
 
@@ -32,6 +34,8 @@ var Settings = React.createClass({
             water: '',
             light: '',
             care: '',
+            startDate: '',
+            endDate: '',
             clean: true,
             saved: false
         }
@@ -91,7 +95,9 @@ var Settings = React.createClass({
             humid: plant.humid,
             water: plant.water,           
             light: plant.light,
-            care: plant.care
+            care: plant.care,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate
         }
 
         console.log(data);

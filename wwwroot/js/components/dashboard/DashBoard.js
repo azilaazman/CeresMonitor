@@ -256,7 +256,7 @@ var DashBoard = React.createClass({
               <a href="#" className="list-group-item">
                     <i className="fa fa-hourglass-end fa-fw"></i> {this.state.endDate}
                     <span className="pull-right text-muted small"> 
-                        <em>{this.state.timeLeft} time</em>
+                        <em>{this.state.timeLeft}</em>
                     </span>
               </a>  
           </div>
