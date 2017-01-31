@@ -273,7 +273,7 @@ var DashBoard = React.createClass({
             </div>
               {/* /.panel-heading */}
         <div className="panel-body">
-            <iframe src="http://www.w3schools.com" scrolling="no" width="100%" height="50%">
+            <iframe src="localhost/html/" scrolling="no" width="100%" height="50%">
                   <p>To put live video content</p>
             </iframe>
         </div>
