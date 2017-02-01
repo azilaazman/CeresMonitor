@@ -29,7 +29,7 @@ var BoxPanel = React.createClass({
           <div className="panel-heading">
             <div className="row">
               <div className="col-xs-3">
-                <i className="fa fa-thermometer-empty fa-5x" />
+                <i className={this.props.icon} />
               </div>
               <div className="col-xs-9 text-right">
                 <div className="huge">{this.props.data}</div>

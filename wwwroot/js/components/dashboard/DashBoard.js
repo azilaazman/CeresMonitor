@@ -199,7 +199,7 @@ var DashBoard = React.createClass({
           <div id="page-wrapper">
             <div className="row">              
               <div className="col-lg-12">
-                <h1 data-step="1" data-intro="This is your home!" className="page-header">Dashboard</h1>
+                <h1 data-step="1" data-intro="This is your home!" className="page-header">Dashboardx</h1>
               </div>
                 {/* /.col-lg-12 */}
             </div>
@@ -213,6 +213,7 @@ var DashBoard = React.createClass({
                 link="/plants/tempDetails" 
                 data={this.state.temp}
                 title="Temperature"
+                icon="fa fa-thermometer-empty fa-5x"
               />
       
               <BoxPanel 
@@ -220,6 +221,7 @@ var DashBoard = React.createClass({
                 link="/plants/humidityDetails"
                 data={this.state.humid}
                 title="Humidity"
+                icon="fa fa-tint fa-5x"
               />
 
               <BoxPanel 
@@ -227,6 +229,7 @@ var DashBoard = React.createClass({
                 link="/plants/electricityDetails"
                 data={this.state.power}
                 title="Electricity"
+                icon="fa fa-bolt fa-5x"
               />
 
               <BoxPanel 
@@ -234,6 +237,7 @@ var DashBoard = React.createClass({
                 link="/plants/lightDetails"
                 data={this.state.light}
                 title="Light Intensity"
+                icon="fa fa-sun-o fa-5x"
               />
                 
           </div>
