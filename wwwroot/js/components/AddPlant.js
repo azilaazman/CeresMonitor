@@ -10,6 +10,7 @@ var AddPlant = React.createClass({
   },
     getInitialState: function(){
         return {
+            unit_id: '',
             name: '',
             temp: '',
             humid: '',
@@ -67,6 +68,9 @@ var AddPlant = React.createClass({
     onLightChange: function (e) {
         this.setState({ light: e.target.value });
     },
+    onUnitChange: function(e){
+        this.setState({ unit_id: e.target.value })
+    },
     handleSubmit: function (e) {
         e.preventDefault();
 
@@ -78,10 +82,10 @@ var AddPlant = React.createClass({
         //   endDate: end_dateObject
         // });
 
-        console.log("Start Date: " + this.state.startDate);
-        console.log("End Date: " + this.state.endDate);
+        // console.log("Start Date: " + this.state.startDate);
+        // console.log("End Date: " + this.state.endDate);
 
-
+        var unit_id = this.state.unit_id.trim();
         var name = this.state.name.trim();
         var temp = this.state.temp.trim();
         var humid = this.state.humid.trim();
@@ -92,13 +96,15 @@ var AddPlant = React.createClass({
         var endDate = this.state.endDate;
 
         //no validation
-        this.onServerSubmit({ name: name, temp: temp, humid: humid, water: water, care: care, light: light, startDate: startDate, endDate: endDate });
+        this.onServerSubmit({ unit_id: unit_id, name: name, temp: temp, humid: humid, water: water, care: care, light: light, startDate: startDate, endDate: endDate });
     },
     onServerSubmit: function (plant) {
         //var plants = this.state.data;
 
         // TODO: submit to the server and refresh the list
         var data = {
+
+            unit_id: plant.unit_id,
             name: plant.name,
             temp: plant.temp,
             humid: plant.humid,
@@ -118,7 +124,7 @@ var AddPlant = React.createClass({
             data: data,
             success: function (data) {
                 //clear form
-                this.setState({ name: '', temp: '', humid: '', water: '', light: '', startDate: '', endDate: ''});
+                this.setState({ unit_id: '', name: '', temp: '', humid: '', water: '', light: '', startDate: '', endDate: ''});
                 // alert("Plant " + plant.name + " added!");
                 this.setState({
                   success: true
@@ -193,6 +199,11 @@ var AddPlant = React.createClass({
                 <div className="row"> 
                   <div className="col-lg-6">
                     <form role="form">
+                    <label>CERES Unit ID</label>
+                      <div className="form-group">
+                        <input type="text" className="form-control" value={this.state.unit_id} onChange={this.onUnitChange} />
+                      </div>
+
                       <label>Plant Name</label>
                       <div className="form-group">
                         <input type="text" className="form-control" value={this.state.name} onChange={this.onNameChange} />
