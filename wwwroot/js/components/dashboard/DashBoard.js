@@ -74,9 +74,8 @@ var DashBoard = React.createClass({
         this.setState({
           temp:  plantData["temp"] + '°C',
           humid: plantData["humid"] + '%',
-          water: plantData["water"],
-          light: plantData["light"] + 'lm',
           power: plantData["power"] + 'W',
+          light: plantData["light"] + 'lm'
         })
 
         this.checkWaterAlert();
@@ -278,7 +277,7 @@ var DashBoard = React.createClass({
             </div>
               {/* /.panel-heading */}
         <div className="panel-body">
-            <iframe src="localhost/html/" scrolling="no" width="100%" height="50%">
+            <iframe src="http://www.w3schools.com" scrolling="no" width="100%" height="50%">
                   <p>To put live video content</p>
             </iframe>
         </div>
