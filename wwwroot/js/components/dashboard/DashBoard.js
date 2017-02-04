@@ -74,7 +74,7 @@ var DashBoard = React.createClass({
         this.setState({
           temp:  plantData["temp"] + '°C',
           humid: plantData["humid"] + '%',
-          water: plantData["water"],
+          power: plantData["power"] + 'W',
           light: plantData["light"] + 'lm'
         })
 
@@ -199,7 +199,7 @@ var DashBoard = React.createClass({
           <div id="page-wrapper">
             <div className="row">              
               <div className="col-lg-12">
-                <h1 data-step="1" data-intro="This is your home!" className="page-header">Dashboardx</h1>
+                <h1 data-step="1" data-intro="This is your home!" className="page-header">Dashboard</h1>
               </div>
                 {/* /.col-lg-12 */}
             </div>
