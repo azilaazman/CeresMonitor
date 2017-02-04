@@ -133,7 +133,7 @@ const TempDetails = React.createClass({
                         <div className="col-md-12">
                           <div className="panel panel-green">
                             <div className="panel-heading">
-                              <i className="fa fa-clock-o" aria-hidden="true" /> In the past 24 hours
+                              <i className="fa fa-clock-o" aria-hidden="true" /> In the past hour..
                             </div>
                             <div className="panel-body">
                               <h4 className="text-danger">Highest Temperature: {this.state.max} °</h4>
