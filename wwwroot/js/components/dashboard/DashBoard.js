@@ -75,7 +75,8 @@ var DashBoard = React.createClass({
           temp:  plantData["temp"] + '°C',
           humid: plantData["humid"] + '%',
           power: plantData["power"] + 'W',
-          light: plantData["light"] + 'lm'
+          light: plantData["light"] + '%', 
+          water: plantData["water"]
         })
 
         this.checkWaterAlert();
@@ -153,8 +154,9 @@ var DashBoard = React.createClass({
       // console.log(this.state.timeAgo + " : " + this.state.timeLeft);
     },
     checkWaterAlert: function(){
-      // var currentWater = parseFloat(this.state.water); //uncomment this once water level data is rcved
-      var currentWater = 6; //FOR TESTING ONLY
+      var currentWater = parseFloat(this.state.water); //uncomment this once water level data is rcved
+      // var currentWater = 6; //FOR TESTING ONLY
+      console.log(this.state.water);
       var alertSetting = parseFloat(this.state.waterAlert);
       // console.log(currentWater + " and " + alertSetting);
 
@@ -205,7 +207,7 @@ var DashBoard = React.createClass({
             </div>
               {/* /.row */}
           <div className="row">
-          <WaterLevelAlert waterAlert={this.state.waterAlert} currentWater='6' showAlert={this.state.showAlert}/>
+          <WaterLevelAlert waterAlert={this.state.waterAlert} currentWater={this.state.water} showAlert={this.state.showAlert}/>
             <div className="row" data-step="2" data-intro="Find all your crucial data here!"> 
             
               <BoxPanel 
