@@ -23,7 +23,7 @@ var WaterLevelAlert = React.createClass({
       <div>
       <div className="alert alert-danger alert-dismissable">
         <button type="button" className="close" onClick={this.close}>×</button>
-        Holy guacamole! Your current water level is at {water}cm which has exceeded your water level settings of {waterAlert}cm. Is this expected? <a href="/plants/settings" className="alert-link"> Modify your settings. </a>
+        Holy guacamole! Your current water level is at {water}cm which has is too low. Your water level settings of {waterAlert}cm. Is this expected? <a href="/plants/settings" className="alert-link"> Modify your settings. </a>
       </div>
       </div>
     );
@@ -160,7 +160,7 @@ var DashBoard = React.createClass({
       var alertSetting = parseFloat(this.state.waterAlert);
       // console.log(currentWater + " and " + alertSetting);
 
-      if(currentWater > alertSetting){
+      if(currentWater < alertSetting){
           this.setState({
             showAlert: true
           })
