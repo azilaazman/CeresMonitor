@@ -75,7 +75,7 @@ var DashBoard = React.createClass({
           temp:  plantData["temp"] + '°C',
           humid: plantData["humid"] + '%',
           power: plantData["power"] + 'W',
-          light: plantData["light"] + '%', 
+          light: plantData["light"] + 'lm', 
           water: plantData["water"]
         })
 
@@ -181,7 +181,7 @@ var DashBoard = React.createClass({
             humid: '-%',
             water: '-',
             care: '',
-            light: '-%',
+            light: '-lm',
             power: '-W',
             waterAlert: '',
             showAlert: false,
