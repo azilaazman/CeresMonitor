@@ -181,7 +181,7 @@ var DashBoard = React.createClass({
             humid: '-%',
             water: '-',
             care: '',
-            light: '-lm',
+            light: '-%',
             power: '-W',
             waterAlert: '',
             showAlert: false,

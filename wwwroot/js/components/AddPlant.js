@@ -216,7 +216,7 @@ var AddPlant = React.createClass({
                       <label>Light Intensity</label>
         <div className="form-group input-group">
           <input id="light" type="text" className="form-control" placeholder="Light Intensity" value={this.state.light} onChange={this.onLightChange}/>
-          <span className="input-group-addon">lm</span>
+          <span className="input-group-addon">%</span>
         </div>
         <label>Temperature</label>
             <div className="form-group input-group">
