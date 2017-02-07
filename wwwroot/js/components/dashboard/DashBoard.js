@@ -23,7 +23,7 @@ var WaterLevelAlert = React.createClass({
       <div>
       <div className="alert alert-danger alert-dismissable">
         <button type="button" className="close" onClick={this.close}>×</button>
-        Holy guacamole! Your current water level is at {water}cm which has is too low. Your water level settings of {waterAlert}cm. Is this expected? <a href="/plants/settings" className="alert-link"> Modify your settings. </a>
+        Holy guacamole! Your current water level is at {water}cm which is too low. Your water level settings is {waterAlert}cm. Is this expected? <a href="/plants/settings" className="alert-link"> Modify your settings. </a>
       </div>
       </div>
     );
